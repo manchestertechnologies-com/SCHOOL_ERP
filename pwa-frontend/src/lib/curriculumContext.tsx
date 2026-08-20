@@ -45,9 +45,21 @@ export const CurriculumProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     async function loadSavedProfile() {
       const saved = await getOnboardingState();
       if (saved) {
-        setOnboardingState(saved);
-        if (saved.selectedSubjects && saved.selectedSubjects.length > 0) {
-          setActiveSubject(saved.selectedSubjects[0]);
+        // Migration: ensure computer_science is always included for Class 11/12 profiles
+        // This handles existing users who completed onboarding before CS was added.
+        let migratedState = saved;
+        if (!saved.selectedSubjects.includes('computer_science')) {
+          migratedState = {
+            ...saved,
+            selectedSubjects: [...saved.selectedSubjects, 'computer_science'],
+          };
+          // Persist the migration so it sticks after refresh
+          await saveOnboardingState(migratedState);
+        }
+        setOnboardingState(migratedState);
+        if (migratedState.selectedSubjects && migratedState.selectedSubjects.length > 0) {
+          // Keep the previously active subject if possible, default to first
+          setActiveSubject(migratedState.selectedSubjects[0]);
         }
       } else {
         // Prompt onboarding for first time
