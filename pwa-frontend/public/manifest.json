@@ -1,0 +1,18 @@
+{
+  "name": "Manchester Technologies — Bridge Learn",
+  "short_name": "Bridge Learn",
+  "description": "Premium academic learning platform for CBSE, NCERT & State Boards — by Manchester Technologies",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

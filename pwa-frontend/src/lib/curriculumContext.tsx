@@ -1,0 +1,102 @@
+'use client';
+
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import {
+  BOARDS,
+  ACADEMIC_YEARS,
+  KARNATAKA_2PUC_PHYSICS_CURRICULUM,
+  Board,
+  SubjectCurriculum,
+} from '@/lib/curriculum';
+import { OnboardingState, getOnboardingState, saveOnboardingState } from '@/lib/db';
+
+interface CurriculumContextType {
+  onboardingState: OnboardingState;
+  activeBoard: Board;
+  activeClass: string;
+  activeSubject: string;
+  activeAcademicYear: string;
+  activeCurriculum: SubjectCurriculum;
+  showOnboardingModal: boolean;
+  setShowOnboardingModal: (show: boolean) => void;
+  showSearchModal: boolean;
+  setShowSearchModal: (show: boolean) => void;
+  updateOnboarding: (newState: Partial<OnboardingState>) => Promise<void>;
+  setActiveSubject: (subjectId: string) => void;
+}
+
+const DEFAULT_ONBOARDING: OnboardingState = {
+  boardId: 'karnataka',
+  classId: '2nd PUC (12)',
+  streamId: 'science',
+  selectedSubjects: ['physics', 'chemistry', 'mathematics', 'biology'],
+  academicYear: '2026-27',
+  completedOnboarding: true,
+};
+
+const CurriculumContext = createContext<CurriculumContextType | null>(null);
+
+export const CurriculumProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [onboardingState, setOnboardingState] = useState<OnboardingState>(DEFAULT_ONBOARDING);
+  const [activeSubject, setActiveSubject] = useState<string>('physics');
+  const [showOnboardingModal, setShowOnboardingModal] = useState<boolean>(false);
+  const [showSearchModal, setShowSearchModal] = useState<boolean>(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    async function loadSavedProfile() {
+      const saved = await getOnboardingState();
+      if (saved) {
+        setOnboardingState(saved);
+        if (saved.selectedSubjects && saved.selectedSubjects.length > 0) {
+          setActiveSubject(saved.selectedSubjects[0]);
+        }
+      } else {
+        // Prompt onboarding for first time
+        setShowOnboardingModal(true);
+      }
+      setIsLoaded(true);
+    }
+    loadSavedProfile();
+  }, []);
+
+  const activeBoard = BOARDS.find((b) => b.id === onboardingState.boardId) || BOARDS[0];
+
+  const updateOnboarding = async (newState: Partial<OnboardingState>) => {
+    const updated = { ...onboardingState, ...newState };
+    setOnboardingState(updated);
+    await saveOnboardingState(updated);
+  };
+
+  // Active curriculum object resolved dynamically
+  const activeCurriculum: SubjectCurriculum = KARNATAKA_2PUC_PHYSICS_CURRICULUM;
+
+  return (
+    <CurriculumContext.Provider
+      value={{
+        onboardingState,
+        activeBoard,
+        activeClass: onboardingState.classId,
+        activeSubject,
+        activeAcademicYear: onboardingState.academicYear,
+        activeCurriculum,
+        showOnboardingModal,
+        setShowOnboardingModal,
+        showSearchModal,
+        setShowSearchModal,
+        updateOnboarding,
+        setActiveSubject,
+      }}
+    >
+      {children}
+    </CurriculumContext.Provider>
+  );
+};
+
+export const useCurriculum = () => {
+  const ctx = useContext(CurriculumContext);
+  if (!ctx) {
+    throw new Error('useCurriculum must be used within a CurriculumProvider');
+  }
+  return ctx;
+};

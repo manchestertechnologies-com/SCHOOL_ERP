@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: msb_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: manchester_school_bridge
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: SecureDbPassword2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - msb_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: msb_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - msb_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: msb_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@msb.internal
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - msb_network
+
+  api:
+    build:
+      context: .
+      dockerfile: backend.Dockerfile
+    container_name: msb_api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://admin:SecureDbPassword2026@postgres:5432/manchester_school_bridge?schema=public
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=SuperSecretKeyManchesterSchoolBridge2026
+      - JWT_REFRESH_SECRET=AnotherSuperSecretRefreshKey2026
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - msb_network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  msb_network:
+    driver: bridge

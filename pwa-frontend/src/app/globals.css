@@ -1,0 +1,223 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --mt-bg: #050505;
+    --mt-bg-secondary: #0a0a0a;
+    --mt-card: #111111;
+    --mt-elevated: #161616;
+    --mt-gold: #d4a72c;
+    --mt-gold-bright: #f2c94c;
+    --mt-gold-soft: #b88a20;
+    --mt-text: #ffffff;
+    --mt-text-secondary: #a3a3a3;
+    --mt-muted: #707070;
+    --mt-border: #292929;
+    --mt-gold-border: rgba(212, 167, 44, 0.2);
+    --mt-gold-border-hover: rgba(212, 167, 44, 0.4);
+  }
+
+  html, body {
+    @apply bg-mt-bg text-mt-text antialiased;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::selection {
+    background: rgba(212, 167, 44, 0.35);
+    color: #ffffff;
+  }
+}
+
+@layer components {
+  /* Premium card */
+  .mt-card {
+    @apply bg-mt-card border border-mt-border rounded-card shadow-card;
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .mt-card-interactive {
+    @apply mt-card;
+  }
+
+  .mt-card-interactive:hover {
+    @apply -translate-y-0.5 shadow-card-hover;
+    border-color: var(--mt-gold-border-hover);
+  }
+
+  /* Primary CTA button */
+  .mt-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-[11px]
+           bg-mt-gold-bright text-mt-bg font-semibold text-sm
+           transition-all duration-premium;
+  }
+
+  .mt-btn-primary:hover {
+    @apply brightness-110;
+  }
+
+  .mt-btn-primary:active {
+    @apply scale-[0.98];
+  }
+
+  /* Secondary button */
+  .mt-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-[11px]
+           bg-transparent border font-semibold text-sm text-mt-text
+           transition-all duration-premium;
+    border-color: var(--mt-gold-border);
+  }
+
+  .mt-btn-secondary:hover {
+    border-color: var(--mt-gold-border-hover);
+    @apply text-mt-gold-bright;
+  }
+
+  /* Ghost button */
+  .mt-btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-[11px]
+           bg-transparent text-mt-text-secondary font-medium text-sm
+           transition-all duration-premium;
+  }
+
+  .mt-btn-ghost:hover {
+    @apply text-mt-gold-bright;
+  }
+
+  /* Gold accent text */
+  .mt-gold-text {
+    @apply text-mt-gold-bright;
+  }
+
+  /* Section label */
+  .mt-section-label {
+    @apply text-[11px] font-semibold uppercase tracking-widest text-mt-muted;
+  }
+
+  /* Progress bar track */
+  .mt-progress-track {
+    @apply w-full h-1.5 bg-mt-elevated rounded-full overflow-hidden;
+  }
+
+  .mt-progress-fill {
+    @apply h-full rounded-full bg-mt-gold-bright transition-all duration-500;
+  }
+
+  /* Input field */
+  .mt-input {
+    @apply w-full bg-mt-bg border border-mt-border rounded-xl px-4 py-2.5
+           text-sm text-mt-text placeholder:text-mt-muted
+           transition-all duration-premium;
+  }
+
+  .mt-input:focus {
+    @apply outline-none;
+    border-color: var(--mt-gold-border-hover);
+    box-shadow: 0 0 0 3px rgba(212, 167, 44, 0.08);
+  }
+
+  /* Sidebar nav item active */
+  .mt-nav-active {
+    background: rgba(212, 167, 44, 0.08);
+    border-left: 2px solid var(--mt-gold);
+  }
+
+  /* Resume / hero floating panel */
+  .mt-hero-panel {
+    @apply bg-mt-elevated border rounded-card p-6;
+    border-color: var(--mt-gold-border);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* 3D Flip Utilities for Flashcard Engine */
+.perspective {
+  perspective: 1000px;
+}
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: var(--mt-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--mt-border);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mt-gold-soft);
+}
+
+/* Skeleton loading */
+@keyframes mt-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.mt-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--mt-card) 25%,
+    var(--mt-elevated) 50%,
+    var(--mt-card) 75%
+  );
+  background-size: 200% 100%;
+  animation: mt-shimmer 1.5s infinite;
+}
+
+/* KaTeX Black & Gold Custom Styling Overrides */
+.katex {
+  color: var(--mt-text, #ffffff) !important;
+  font-size: 1.05em;
+  line-height: 1.2;
+}
+
+.katex-display {
+  display: block;
+  margin: 0.5em 0 !important;
+  padding: 0.5rem 0 !important;
+  text-align: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+.katex-display::-webkit-scrollbar {
+  height: 3px;
+}
+
+.katex-display::-webkit-scrollbar-thumb {
+  background: var(--mt-gold-border);
+  border-radius: 9999px;
+}
+
+.katex-error {
+  color: var(--mt-gold-bright) !important;
+  background: transparent !important;
+  border: none !important;
+}
+
