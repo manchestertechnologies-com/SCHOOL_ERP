@@ -11,6 +11,25 @@ interface LaTeXRendererProps {
 }
 
 /**
+ * Normalizes delimiter formats:
+ * - \[...\] -> $$...$$
+ * - \(...\) -> $...$
+ * Also handles double-escaped backslashes.
+ */
+function normalizeDelimiters(input: string): string {
+  if (!input) return '';
+  let str = input;
+
+  // Replace \[ ... \] with $$ ... $$
+  str = str.replace(/\\\[([\s\S]+?)\\\]/g, '$$$$$1$$$$');
+
+  // Replace \( ... \) with $ ... $
+  str = str.replace(/\\\(([\s\S]+?)\\\)/g, '$$$1$$');
+
+  return str;
+}
+
+/**
  * Normalizes double-escaped backslashes and cleans up raw LaTeX string.
  */
 function cleanLaTeX(input: string): string {
@@ -70,15 +89,58 @@ const SafeBlockMath: React.FC<{ math: string }> = ({ math }) => {
  * (e.g., "F = \frac{1}{4\pi\varepsilon_0} \frac{|q_1 q_2|}{r^2}").
  */
 function isRawLaTeX(str: string): boolean {
-  return /\\(frac|sqrt|vec|varepsilon|mu|pi|theta|lambda|Delta|sum|int|hat|cdot|approx|lim|times|alpha|beta|gamma|sigma|omega|phi|psi|rho|tau|infty|partial)/.test(str);
+  return /\\(frac|sqrt|vec|varepsilon|mu|pi|theta|lambda|Delta|sum|int|hat|cdot|approx|lim|times|alpha|beta|gamma|sigma|omega|phi|psi|rho|tau|infty|partial|text|quad)/.test(str);
 }
+
+/**
+ * Render plain text chunk with basic Markdown support (**bold**, *italic*, `code`, \n).
+ */
+const FormattedTextChunk: React.FC<{ text: string }> = ({ text }) => {
+  if (!text) return null;
+
+  // Split by newlines
+  const lines = text.split('\n');
+
+  return (
+    <>
+      {lines.map((line, lIdx) => {
+        if (!line && lIdx < lines.length - 1) {
+          return <br key={lIdx} />;
+        }
+
+        // Simple bold (**bold**) split
+        const parts = line.split(/(\*\*[^\*]+\*\*|\*[^\*]+\*|`[^`]+`)/g);
+
+        return (
+          <React.Fragment key={lIdx}>
+            {parts.map((part, pIdx) => {
+              if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
+                return <strong key={pIdx} className="font-semibold text-mt-text">{part.slice(2, -2)}</strong>;
+              }
+              if (part.startsWith('*') && part.endsWith('*') && part.length > 2) {
+                return <em key={pIdx} className="italic text-mt-text-secondary">{part.slice(1, -1)}</em>;
+              }
+              if (part.startsWith('`') && part.endsWith('`') && part.length > 2) {
+                return <code key={pIdx} className="px-1.5 py-0.5 bg-mt-elevated text-mt-gold-bright rounded text-xs font-mono">{part.slice(1, -1)}</code>;
+              }
+              return <span key={pIdx}>{part}</span>;
+            })}
+            {lIdx < lines.length - 1 && <br />}
+          </React.Fragment>
+        );
+      })}
+    </>
+  );
+};
 
 export const LaTeXRenderer: React.FC<LaTeXRendererProps> = ({ content, block = false, className = '' }) => {
   if (!content || typeof content !== 'string') return null;
 
+  const normalized = normalizeDelimiters(content);
+
   // 1. If explicit block flag is set, render entire content as BlockMath
   if (block) {
-    const rawMath = stripMathDelimiters(content);
+    const rawMath = stripMathDelimiters(normalized);
     return (
       <div className={`overflow-x-auto py-2 my-1 text-center font-sans text-mt-text dark:text-slate-100 ${className}`}>
         <SafeBlockMath math={rawMath} />
@@ -87,7 +149,7 @@ export const LaTeXRenderer: React.FC<LaTeXRendererProps> = ({ content, block = f
   }
 
   // 2. Check if the entire content is wrapped in $$...$$ (block equation)
-  const trimmed = content.trim();
+  const trimmed = normalized.trim();
   if (trimmed.startsWith('$$') && trimmed.endsWith('$$') && trimmed.length >= 4 && !trimmed.slice(2, -2).includes('$$')) {
     const math = stripMathDelimiters(trimmed);
     return (
@@ -99,7 +161,7 @@ export const LaTeXRenderer: React.FC<LaTeXRendererProps> = ({ content, block = f
 
   // 3. Parse mixed content: split by $$...$$ and $...$
   const regex = /(\$\$[\s\S]+?\$\$|\$[^\$\n]+?\$)/g;
-  const parts = content.split(regex);
+  const parts = normalized.split(regex);
 
   return (
     <span className={`inline-wrap text-mt-text dark:text-slate-100 ${className}`}>
@@ -127,10 +189,16 @@ export const LaTeXRenderer: React.FC<LaTeXRendererProps> = ({ content, block = f
           return <SafeInlineMath key={index} math={part} />;
         }
 
-        // Plain text chunk
-        return <span key={index}>{part}</span>;
+        // Plain text chunk with markdown formatting
+        return <FormattedTextChunk key={index} text={part} />;
       })}
     </span>
   );
 };
+
+// Aliases for unified mathematical rendering across the application
+export const MathText = LaTeXRenderer;
+export const MarkdownMathRenderer = LaTeXRenderer;
+export const MathFormula = LaTeXRenderer;
+
 
