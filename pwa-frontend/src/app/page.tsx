@@ -54,14 +54,37 @@ const subjectMastery = [
   { subject: 'Chemistry', progress: 64 },
   { subject: 'Mathematics', progress: 58 },
   { subject: 'Biology', progress: 61 },
+  { subject: 'Computer Science', progress: 0 },
 ];
 
 export default function Dashboard() {
   const { activeBoard, activeClass, activeCurriculum } = useCurriculum();
 
   const currentChapter = activeCurriculum.chapters[0];
-  const currentTopic = currentChapter.topics[0];
-  const recommendedTopic = currentChapter.topics[1];
+
+  if (!currentChapter) {
+    return (
+      <div className="space-y-6 pb-12 max-w-6xl mx-auto">
+        <div className="mt-card p-8 text-center space-y-3">
+          <BookOpen className="w-8 h-8 text-mt-gold mx-auto" />
+          <h1 className="text-2xl font-bold text-mt-text">Syllabus not available for this selection</h1>
+          <p className="text-sm text-mt-muted">
+            The supplied curriculum data currently covers Class 11 and Class 12 NCERT-based science subjects.
+          </p>
+          <Link href="/learn" className="mt-btn-primary inline-flex">
+            Open Curriculum
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const currentTopic =
+    currentChapter.topics[0] || {
+      title: `${currentChapter.title} syllabus overview`,
+      pyqCount: 0,
+    };
+  const recommendedTopic = currentChapter.topics[1] || currentTopic;
 
   return (
     <div className="space-y-10 pb-12 max-w-6xl mx-auto">

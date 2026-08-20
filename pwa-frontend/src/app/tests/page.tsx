@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCurriculum } from '@/lib/curriculumContext';
-import { KARNATAKA_2PUC_PHYSICS_CURRICULUM, SAMPLE_QUESTIONS } from '@/lib/curriculum';
+import { getQuestionsForCurriculum } from '@/lib/curriculum';
 import { MockTestEngine } from '@/components/tests/MockTestEngine';
-import { FlaskConical, Users, Zap, Check, Play, Share2, Plus, Sparkles, Copy, AlertCircle } from 'lucide-react';
+import { Users, Zap, Check, Play, Share2, Plus, Sparkles } from 'lucide-react';
 import { saveSharedTest, getSharedTest } from '@/lib/db';
 
 export default function TestsPage() {
-  const { activeBoard, activeClass, activeSubject } = useCurriculum();
+  const { activeBoard, activeClass, activeSubject, activeCurriculum } = useCurriculum();
 
   const [activeTab, setActiveTab] = useState<'create' | 'self' | 'friend'>('create');
   const [activeRunningTest, setActiveRunningTest] = useState<{ title: string; durationMinutes: number; questions: any[] } | null>(null);
@@ -18,23 +18,40 @@ export default function TestsPage() {
   const [generatedShareCode, setGeneratedShareCode] = useState<string | null>(null);
 
   // Custom Test Generator Form State
-  const [selectedChapters, setSelectedChapters] = useState<string[]>(['kar-phy-ch1', 'kar-phy-ch3']);
+  const [selectedChapters, setSelectedChapters] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState<string>('Medium');
   const [totalMarks, setTotalMarks] = useState<number>(50);
   const [durationMinutes, setDurationMinutes] = useState<number>(60);
 
-  const chapters = KARNATAKA_2PUC_PHYSICS_CURRICULUM.chapters;
+  const chapters = activeCurriculum.chapters;
+  const questions = getQuestionsForCurriculum(activeCurriculum);
+
+  useEffect(() => {
+    setSelectedChapters(chapters.slice(0, 2).map((chapter) => chapter.id));
+    setActiveRunningTest(null);
+    setGeneratedShareCode(null);
+  }, [activeBoard.id, activeClass, activeSubject, chapters.length]);
 
   const handleGenerateCustomTest = async () => {
+    if (questions.length === 0) {
+      alert('No question bank is currently mapped to this selected syllabus.');
+      return;
+    }
+
     const testTitle = `Custom Practice Test (${activeBoard.shortCode} Class ${activeClass})`;
     setActiveRunningTest({
       title: testTitle,
       durationMinutes,
-      questions: SAMPLE_QUESTIONS,
+      questions,
     });
   };
 
   const handleCreateFriendTest = async () => {
+    if (questions.length === 0) {
+      alert('No question bank is currently mapped to this selected syllabus.');
+      return;
+    }
+
     const code = `BL${Math.floor(1000 + Math.random() * 9000)}`;
     await saveSharedTest({
       id: code,
@@ -42,7 +59,7 @@ export default function TestsPage() {
       boardId: activeBoard.id,
       classId: activeClass,
       subjectId: activeSubject,
-      questionIds: SAMPLE_QUESTIONS.map((q) => q.id),
+      questionIds: questions.map((q) => q.id),
       totalMarks: 50,
       durationMinutes: 45,
       createdAt: Date.now(),
@@ -52,19 +69,24 @@ export default function TestsPage() {
   };
 
   const handleJoinFriendTest = async () => {
+    if (questions.length === 0) {
+      alert('No question bank is currently mapped to this selected syllabus.');
+      return;
+    }
+
     const shared = await getSharedTest(enterTestCode.trim());
     if (shared) {
       setActiveRunningTest({
         title: shared.title,
         durationMinutes: shared.durationMinutes,
-        questions: SAMPLE_QUESTIONS,
+        questions,
       });
     } else {
       alert(`Test Code "${enterTestCode}" not found. Generating quick demo test...`);
       setActiveRunningTest({
         title: `Friend Challenge Test (${enterTestCode})`,
         durationMinutes: 45,
-        questions: SAMPLE_QUESTIONS,
+        questions,
       });
     }
   };
@@ -86,9 +108,16 @@ export default function TestsPage() {
       <div className="mt-card p-6 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-mt-border pb-3">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-mt-gold-bright">{activeBoard.shortCode} • Class {activeClass}</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-mt-gold-bright">
+              {activeBoard.shortCode} • Class {activeClass}
+            </span>
             <h1 className="text-2xl font-bold text-mt-text">Mock Test & Examination Engine</h1>
-            <p className="text-xs text-mt-muted mt-0.5">Generate custom tests, launch instant self-tests, or challenge friends with test codes.</p>
+            <p className="text-xs text-mt-muted mt-0.5">
+              Generate custom tests, launch instant self-tests, or challenge friends with test codes.
+            </p>
+            <p className="text-[11px] text-mt-gold mt-1">
+              {activeCurriculum.subjectName}: {chapters.length} syllabus chapters • {questions.length} mapped questions
+            </p>
           </div>
         </div>
 
@@ -219,13 +248,17 @@ export default function TestsPage() {
               <h4 className="font-bold text-base text-mt-text">{t.title}</h4>
               <p className="text-xs text-mt-muted">Duration: {t.duration} Mins • {t.qCount} Questions</p>
               <button
-                onClick={() =>
+                onClick={() => {
+                  if (questions.length === 0) {
+                    alert('No question bank is currently mapped to this selected syllabus.');
+                    return;
+                  }
                   setActiveRunningTest({
                     title: t.title,
                     durationMinutes: t.duration,
-                    questions: SAMPLE_QUESTIONS,
-                  })
-                }
+                    questions,
+                  });
+                }}
                 className="mt-btn-primary text-xs px-4 py-2"
               >
                 <Play className="w-3.5 h-3.5 fill-mt-bg text-mt-bg" /> Start Now

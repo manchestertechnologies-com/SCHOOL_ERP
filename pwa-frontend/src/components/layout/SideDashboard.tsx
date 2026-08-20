@@ -5,6 +5,7 @@ import { useCurriculum } from '@/lib/curriculumContext';
 import { AITutorPanel } from '@/components/ai/AITutorPanel';
 import { LaTeXRenderer } from '@/components/math/LaTeXRenderer';
 import { cn } from '@/lib/cn';
+import { SUBJECTS } from '@/lib/curriculum';
 import {
   Sparkles,
   Timer,
@@ -35,6 +36,7 @@ const tabs = [
 
 export const SideDashboard: React.FC<SideDashboardProps> = ({ open, onClose }) => {
   const { activeBoard, activeSubject } = useCurriculum();
+  const activeSubjectLabel = SUBJECTS.find((subject) => subject.id === activeSubject)?.label || activeSubject;
   const [activeTab, setActiveTab] = useState<'ai' | 'timer' | 'formulas' | 'notes' | 'mastery'>('ai');
 
   const [timeLeft, setTimeLeft] = useState(25 * 60);
@@ -105,7 +107,7 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({ open, onClose }) =
               <div>
                 <h3 className="font-semibold text-mt-text text-xs tracking-tight">Side Dashboard</h3>
                 <span className="text-[10px] text-mt-muted font-medium">
-                  {activeBoard.shortCode} • {activeSubject}
+                  {activeBoard.shortCode} • {activeSubjectLabel}
                 </span>
               </div>
             </div>

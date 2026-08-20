@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCurriculum } from '@/lib/curriculumContext';
+import { SUBJECTS } from '@/lib/curriculum';
 import { ManchesterLogo } from '@/components/brand/ManchesterLogo';
 import { cn } from '@/lib/cn';
 import {
@@ -36,8 +37,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onCloseMobile,
 }) => {
   const pathname = usePathname();
-  const { activeBoard, activeClass, activeSubject, setActiveSubject, setShowOnboardingModal } =
-    useCurriculum();
+  const {
+    activeBoard,
+    activeClass,
+    activeSubject,
+    setActiveSubject,
+    setShowOnboardingModal,
+    onboardingState,
+  } = useCurriculum();
 
   const navItems = [
     { href: '/', label: 'Dashboard', icon: Home },
@@ -50,12 +57,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { href: '/admin', label: 'Admin Console', icon: ShieldCheck },
   ];
 
-  const subjects = [
-    { id: 'physics', label: 'Physics' },
-    { id: 'chemistry', label: 'Chemistry' },
-    { id: 'mathematics', label: 'Mathematics' },
-    { id: 'biology', label: 'Biology' },
-  ];
+  const subjects = SUBJECTS.filter((subject) =>
+    onboardingState.selectedSubjects.includes(subject.id)
+  );
 
   const isExpanded = !collapsed || mobileOpen;
 

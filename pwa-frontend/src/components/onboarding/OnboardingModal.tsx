@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { BOARDS, ACADEMIC_YEARS } from '@/lib/curriculum';
+import { BOARDS, ACADEMIC_YEARS, SUBJECTS } from '@/lib/curriculum';
 import { useCurriculum } from '@/lib/curriculumContext';
 import { Check, ArrowRight, BookOpen, GraduationCap, Calendar, Sparkles, X } from 'lucide-react';
 
@@ -13,7 +13,7 @@ export const OnboardingModal: React.FC = () => {
   const [classId, setClassId] = useState<string>(onboardingState.classId);
   const [streamId, setStreamId] = useState<string>(onboardingState.streamId || 'science');
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>(
-    onboardingState.selectedSubjects || ['physics', 'chemistry', 'mathematics', 'biology']
+    onboardingState.selectedSubjects || ['physics', 'chemistry', 'mathematics', 'biology', 'computer_science']
   );
   const [academicYear, setAcademicYear] = useState<string>(onboardingState.academicYear);
 
@@ -163,7 +163,7 @@ export const OnboardingModal: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
-                { id: 'science', label: 'Science', desc: 'Physics, Chemistry, Math, Bio' },
+                { id: 'science', label: 'Science', desc: 'Physics, Chemistry, Math, Biology, Computer Science' },
                 { id: 'commerce', label: 'Commerce', desc: 'Accounts, Economics, Business' },
                 { id: 'arts', label: 'Arts / Humanities', desc: 'History, Political Science' },
               ].map((str) => {
@@ -201,12 +201,7 @@ export const OnboardingModal: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              {[
-                { id: 'physics', name: 'Physics' },
-                { id: 'chemistry', name: 'Chemistry' },
-                { id: 'mathematics', name: 'Mathematics' },
-                { id: 'biology', name: 'Biology' },
-              ].map((subj) => {
+              {SUBJECTS.map((subj) => {
                 const isSelected = selectedSubjects.includes(subj.id);
                 return (
                   <button
@@ -218,7 +213,7 @@ export const OnboardingModal: React.FC = () => {
                         : 'border-mt-border bg-mt-card hover:bg-mt-elevated text-mt-text-secondary'
                     }`}
                   >
-                    <span>{subj.name}</span>
+                    <span>{subj.label}</span>
                     {isSelected && <Check className="w-4 h-4 text-mt-gold-bright" />}
                   </button>
                 );

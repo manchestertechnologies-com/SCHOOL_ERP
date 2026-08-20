@@ -2,19 +2,19 @@
 
 import React, { useState } from 'react';
 import { useCurriculum } from '@/lib/curriculumContext';
-import { KARNATAKA_2PUC_PHYSICS_CURRICULUM, SAMPLE_QUESTIONS } from '@/lib/curriculum';
-import { Search, X, BookOpen, Layers, HelpCircle, FileText, ArrowRight } from 'lucide-react';
+import { getQuestionsForCurriculum } from '@/lib/curriculum';
+import { Search, X } from 'lucide-react';
 import { LaTeXRenderer } from '@/components/math/LaTeXRenderer';
 import Link from 'next/link';
 
 export const SearchModal: React.FC = () => {
-  const { showSearchModal, setShowSearchModal, activeBoard, activeClass } = useCurriculum();
+  const { showSearchModal, setShowSearchModal, activeBoard, activeClass, activeCurriculum } = useCurriculum();
   const [query, setQuery] = useState('');
   const [searchAllBoards, setSearchAllBoards] = useState(false);
 
   if (!showSearchModal) return null;
 
-  const chapters = KARNATAKA_2PUC_PHYSICS_CURRICULUM.chapters;
+  const chapters = activeCurriculum.chapters;
   const lowerQuery = query.toLowerCase().trim();
 
   // Search results
@@ -26,8 +26,9 @@ export const SearchModal: React.FC = () => {
       )
     : [];
 
+  const questions = getQuestionsForCurriculum(activeCurriculum);
   const matchingQuestions = lowerQuery
-    ? SAMPLE_QUESTIONS.filter((q) => q.question.toLowerCase().includes(lowerQuery) || q.explanation.toLowerCase().includes(lowerQuery))
+    ? questions.filter((q) => q.question.toLowerCase().includes(lowerQuery) || q.explanation.toLowerCase().includes(lowerQuery))
     : [];
 
   return (
@@ -65,7 +66,7 @@ export const SearchModal: React.FC = () => {
             onClick={() => setSearchAllBoards(!searchAllBoards)}
             className="text-mt-gold-bright hover:underline font-semibold"
           >
-            {searchAllBoards ? 'Scope: Current Board Only' : 'Search All Boards'}
+            {searchAllBoards ? 'Scope: Current Curriculum' : 'Current Curriculum'}
           </button>
         </div>
 
@@ -98,7 +99,7 @@ export const SearchModal: React.FC = () => {
                     <span className="text-[10px] bg-mt-gold/10 border border-mt-gold/20 px-2 py-0.5 rounded-full text-mt-gold-bright font-medium">{t.priority} Priority</span>
                   </div>
                   <h5 className="font-semibold text-sm text-mt-text mt-1">{t.title}</h5>
-                  <p className="text-xs text-mt-muted line-clamp-1 mt-0.5">{t.description}</p>
+                  <p className="text-xs text-mt-muted mt-0.5 line-clamp-1">{t.description}</p>
                 </Link>
               ))}
             </div>
@@ -106,7 +107,7 @@ export const SearchModal: React.FC = () => {
 
           {matchingQuestions.length > 0 && (
             <div className="space-y-2">
-              <h4 className="text-[11px] font-semibold text-mt-muted uppercase tracking-wider">Matching Practice Questions / PYQs</h4>
+              <h4 className="text-[11px] font-semibold text-mt-muted uppercase tracking-wider">Matching Practice Questions</h4>
               {matchingQuestions.map((q) => (
                 <Link
                   key={q.id}
@@ -114,11 +115,11 @@ export const SearchModal: React.FC = () => {
                   onClick={() => setShowSearchModal(false)}
                   className="block p-3.5 bg-mt-card hover:bg-mt-elevated rounded-xl border border-mt-border hover:border-mt-gold/30 transition-all duration-premium"
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-mt-gold-bright uppercase">{q.type} • {q.marks} Mark</span>
-                    {q.isPYQ && <span className="text-[10px] bg-mt-elevated text-mt-gold-bright border border-mt-gold/20 px-2 py-0.5 rounded-full font-medium">PYQ {q.pyqYear}</span>}
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-semibold text-mt-gold uppercase">{q.type} • {q.marks} Marks</span>
+                    <span className="text-[10px] text-mt-muted">{q.difficulty}</span>
                   </div>
-                  <p className="font-medium text-xs text-mt-text-secondary mt-1 line-clamp-2"><LaTeXRenderer content={q.question} /></p>
+                  <p className="text-xs text-mt-text mt-1 line-clamp-2"><LaTeXRenderer content={q.question} /></p>
                 </Link>
               ))}
             </div>

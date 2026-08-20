@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { useCurriculum } from '@/lib/curriculumContext';
-import { BOARDS, ACADEMIC_YEARS, KARNATAKA_2PUC_PHYSICS_CURRICULUM } from '@/lib/curriculum';
-import { ShieldCheck, Upload, FileCode, CheckCircle2, AlertTriangle, RefreshCw, Plus, Layers } from 'lucide-react';
+import { BOARDS, ACADEMIC_YEARS } from '@/lib/curriculum';
+import { ShieldCheck, Upload, CheckCircle2, AlertTriangle, RefreshCw, Plus, Layers } from 'lucide-react';
 
 export default function AdminPage() {
   const { activeBoard, activeClass } = useCurriculum();

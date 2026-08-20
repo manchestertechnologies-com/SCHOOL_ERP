@@ -19,6 +19,7 @@ import {
 import { getUnsyncedAttempts, markAttemptsSynced } from '@/lib/db';
 import { useCurriculum } from '@/lib/curriculumContext';
 import { cn } from '@/lib/cn';
+import { SUBJECTS } from '@/lib/curriculum';
 
 interface HeaderProps {
   onToggleMobileSidebar: () => void;
@@ -34,6 +35,8 @@ export const Header: React.FC<HeaderProps> = ({
   const pathname = usePathname();
   const { activeBoard, activeClass, activeSubject, setShowOnboardingModal, setShowSearchModal } =
     useCurriculum();
+
+  const activeSubjectLabel = SUBJECTS.find((subject) => subject.id === activeSubject)?.label || activeSubject;
 
   const [syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'offline'>('synced');
 
@@ -120,7 +123,7 @@ export const Header: React.FC<HeaderProps> = ({
             {getPageTitle()}
             <span className="hidden sm:inline text-mt-muted font-normal">·</span>
             <span className="hidden sm:inline text-xs text-mt-gold capitalize font-medium">
-              {activeSubject}
+              {activeSubjectLabel}
             </span>
           </h2>
         </div>

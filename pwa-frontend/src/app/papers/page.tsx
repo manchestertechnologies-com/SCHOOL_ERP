@@ -14,6 +14,9 @@ export default function PapersPage() {
   const [showSolutions, setShowSolutions] = useState<boolean>(false);
 
   const filteredPapers = PYQ_PAPERS_BANK.filter((p) => {
+    if (p.boardId !== activeBoard.id) return false;
+    if (p.classId !== activeClass) return false;
+    if (p.subjectId !== activeSubject) return false;
     if (selectedYearFilter !== 'all' && String(p.year) !== selectedYearFilter) return false;
     return true;
   });
@@ -67,6 +70,11 @@ export default function PapersPage() {
 
       {/* PAPER CARDS GRID */}
       <div className="space-y-4">
+        {filteredPapers.length === 0 && (
+          <div className="mt-card p-8 text-center text-xs text-mt-muted">
+            No previous-year papers are currently mapped to this selected board, class and subject.
+          </div>
+        )}
         {filteredPapers.map((paper) => (
           <div
             key={paper.id}

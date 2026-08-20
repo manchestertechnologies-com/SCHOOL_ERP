@@ -1,3 +1,5 @@
+import { SYLLABUS_2026_27 } from './syllabusData';
+
 export interface Board {
   id: string;
   name: string;
@@ -157,193 +159,202 @@ export const ACADEMIC_YEARS: AcademicYear[] = [
   { year: '2024-25', isCurrent: false },
 ];
 
-// KARNATAKA 2nd PUC PHYSICS CURRICULUM DATA
-export const KARNATAKA_2PUC_PHYSICS_CURRICULUM: SubjectCurriculum = {
-  boardId: 'karnataka',
-  classId: '2nd PUC (12)',
-  streamId: 'science',
-  subjectId: 'physics',
-  subjectName: 'Physics',
-  academicYear: '2026-27',
-  chapters: [
-    {
-      id: 'kar-phy-ch1',
-      chapterNumber: 1,
-      title: 'Electric Charges and Fields',
-      description: 'Coulomb law, electric field, dipoles, and Gauss law applications.',
-      weightageMarks: 9,
-      estLearningMinutes: 120,
-      difficulty: 'Medium',
-      pyqRelevanceCount: 18,
-      totalQuestionCount: 45,
-      completionPercentage: 68,
-      topics: [
-        {
-          id: 'topic-coulomb',
-          title: "Coulomb's Law & Electrostatic Force",
-          priority: 'HIGH',
-          pyqCount: 7,
-          typicalMarks: [2, 3, 5],
-          syllabusStatus: 'current',
-          description: 'Inverse-square force between point charges in vacuum and medium.',
-          subtopics: ['Permittivity of Free Space', 'Vector Form of Coulomb Law', 'Superposition Principle'],
-        },
-        {
-          id: 'topic-efield',
-          title: 'Electric Field & Electric Dipole',
-          priority: 'HIGH',
-          pyqCount: 6,
-          typicalMarks: [3, 5],
-          syllabusStatus: 'current',
-          description: 'Electric field intensity due to axial and equatorial point charges & dipoles.',
-          subtopics: ['Axial Field Derivation', 'Equatorial Field Derivation', 'Torque on Dipole'],
-        },
-        {
-          id: 'topic-gauss',
-          title: "Gauss's Law & Applications",
-          priority: 'HIGH',
-          pyqCount: 5,
-          typicalMarks: [3, 5],
-          syllabusStatus: 'current',
-          description: 'Electric flux calculation and field due to infinite wire and plane sheet.',
-          subtopics: ['Electric Flux', 'Proof of Gauss Law', 'Field due to Infinitely Long Wire'],
-        },
-        {
-          id: 'topic-field-lines',
-          title: 'Electric Field Lines Properties',
-          priority: 'SUPPORTING',
-          pyqCount: 2,
-          typicalMarks: [1, 2],
-          syllabusStatus: 'current',
-          description: 'Visual representations of electric fields and key property rules.',
-          subtopics: ['Lines of Force', 'Equipotential Surface Intersection'],
-        },
-      ],
-    },
-    {
-      id: 'kar-phy-ch2',
-      chapterNumber: 2,
-      title: 'Electrostatic Potential and Capacitance',
-      description: 'Electric potential, equipotential surfaces, dielectrics, and capacitors.',
-      weightageMarks: 8,
-      estLearningMinutes: 110,
-      difficulty: 'Medium',
-      pyqRelevanceCount: 15,
-      totalQuestionCount: 38,
-      completionPercentage: 40,
-      topics: [
-        {
-          id: 'topic-potential',
-          title: 'Electric Potential due to Point Charge & Dipole',
-          priority: 'HIGH',
-          pyqCount: 5,
-          typicalMarks: [2, 3, 5],
-          syllabusStatus: 'current',
-          description: 'Work done in moving charge and potential derivation.',
-          subtopics: ['Relation between E and V', 'Potential Energy of Dipole'],
-        },
-        {
-          id: 'topic-capacitance',
-          title: 'Parallel Plate Capacitor & Energy Stored',
-          priority: 'HIGH',
-          pyqCount: 7,
-          typicalMarks: [3, 5],
-          syllabusStatus: 'current',
-          description: 'Capacitance formula derivation, series & parallel combinations.',
-          subtopics: ['Dielectric Medium Effect', 'Series and Parallel Combination', 'Energy Density'],
-        },
-        {
-          id: 'topic-vande-graaff',
-          title: 'Van de Graaff Generator',
-          priority: 'SUPPORTING',
-          pyqCount: 0,
-          typicalMarks: [],
-          syllabusStatus: 'deleted',
-          description: 'High voltage particle accelerator (Removed from 2024-25 syllabus onwards).',
-          subtopics: ['Principle of Working', 'Construction Details'],
-        },
-      ],
-    },
-    {
-      id: 'kar-phy-ch3',
-      chapterNumber: 3,
-      title: 'Current Electricity',
-      description: 'Ohm law, drift velocity, Kirchhoff laws, and Wheatstone bridge.',
-      weightageMarks: 11,
-      estLearningMinutes: 150,
-      difficulty: 'Hard',
-      pyqRelevanceCount: 24,
-      totalQuestionCount: 52,
-      completionPercentage: 55,
-      topics: [
-        {
-          id: 'topic-drift',
-          title: 'Drift Velocity & Ohm Law Derivation',
-          priority: 'HIGH',
-          pyqCount: 8,
-          typicalMarks: [2, 3, 5],
-          syllabusStatus: 'current',
-          description: 'Relaxation time, mobility, and microscopic relation J = n e v_d.',
-          subtopics: ['Derivation of Ohm Law', 'Temperature Dependence of Resistivity'],
-        },
-        {
-          id: 'topic-kirchhoff',
-          title: "Kirchhoff's Rules & Wheatstone Bridge",
-          priority: 'HIGH',
-          pyqCount: 11,
-          typicalMarks: [3, 5],
-          syllabusStatus: 'current',
-          description: 'Junction rule, Loop rule, and Wheatstone bridge balance condition derivation.',
-          subtopics: ['KCL and KVL Loop Analysis', 'Balanced Wheatstone Bridge Derivation'],
-        },
-        {
-          id: 'topic-potentiometer',
-          title: 'Potentiometer Applications',
-          priority: 'IMPORTANT',
-          pyqCount: 3,
-          typicalMarks: [3, 5],
-          syllabusStatus: 'deleted',
-          description: 'Comparing EMF and internal resistance (Removed in latest NCERT/Karnataka update).',
-          subtopics: ['EMF Comparison', 'Internal Resistance Measurement'],
-        },
-      ],
-    },
-    {
-      id: 'kar-phy-ch4',
-      chapterNumber: 4,
-      title: 'Moving Charges and Magnetism',
-      description: 'Biot-Savart law, Ampere circuital law, moving coil galvanometer.',
-      weightageMarks: 9,
-      estLearningMinutes: 130,
-      difficulty: 'Hard',
-      pyqRelevanceCount: 16,
-      totalQuestionCount: 40,
-      completionPercentage: 20,
-      topics: [
-        {
-          id: 'topic-biot-savart',
-          title: 'Biot-Savart Law & Circular Loop Field',
-          priority: 'HIGH',
-          pyqCount: 6,
-          typicalMarks: [3, 5],
-          syllabusStatus: 'current',
-          description: 'Magnetic field derivation at the center and axis of a current circular loop.',
-          subtopics: ['Axis of Circular Loop', 'Comparison with Coulomb Law'],
-        },
-        {
-          id: 'topic-galvanometer',
-          title: 'Moving Coil Galvanometer Conversion',
-          priority: 'HIGH',
-          pyqCount: 7,
-          typicalMarks: [3, 5],
-          syllabusStatus: 'current',
-          description: 'Conversion of Galvanometer into Ammeter (Shunt) and Voltmeter (High R).',
-          subtopics: ['Galvanometer Principle', 'Conversion to Ammeter', 'Conversion to Voltmeter'],
-        },
-      ],
-    },
-  ],
+// SUBJECTS AVAILABLE IN THE UPLOADED 2026-27 CLASS 11/12 SYLLABUS
+export const SUBJECTS = [
+  { id: 'physics', label: 'Physics' },
+  { id: 'chemistry', label: 'Chemistry' },
+  { id: 'mathematics', label: 'Mathematics' },
+  { id: 'biology', label: 'Biology' },
+  { id: 'computer_science', label: 'Computer Science' },
+] as const;
+
+export const getClassLevel = (classId: string): '11' | '12' | null => {
+  if (classId.includes('11')) return '11';
+  if (classId.includes('12')) return '12';
+  return null;
 };
+
+const subjectShortCode: Record<string, string> = {
+  physics: 'phy',
+  chemistry: 'chem',
+  mathematics: 'math',
+  biology: 'bio',
+  computer_science: 'cs',
+};
+
+const legacyKarnatakaPhysicsMetadata: Record<number, Partial<Chapter>> = {
+  1: {
+    weightageMarks: 9,
+    estLearningMinutes: 120,
+    difficulty: 'Medium',
+    pyqRelevanceCount: 18,
+    totalQuestionCount: 45,
+    completionPercentage: 68,
+  },
+  2: {
+    weightageMarks: 8,
+    estLearningMinutes: 110,
+    difficulty: 'Medium',
+    pyqRelevanceCount: 15,
+    totalQuestionCount: 38,
+    completionPercentage: 40,
+  },
+  3: {
+    weightageMarks: 11,
+    estLearningMinutes: 150,
+    difficulty: 'Hard',
+    pyqRelevanceCount: 24,
+    totalQuestionCount: 52,
+    completionPercentage: 55,
+  },
+  4: {
+    weightageMarks: 9,
+    estLearningMinutes: 130,
+    difficulty: 'Hard',
+    pyqRelevanceCount: 16,
+    totalQuestionCount: 40,
+    completionPercentage: 20,
+  },
+};
+
+const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 48);
+
+const chapterIdFor = (
+  boardId: string,
+  level: '11' | '12',
+  subjectId: string,
+  chapterNumber: number
+) => {
+  // Preserve the existing Karnataka 2nd PUC Physics chapter IDs so the
+  // current sample question bank remains linked to Chapters 1 and 3.
+  if (boardId === 'karnataka' && level === '12' && subjectId === 'physics') {
+    return `kar-phy-ch${chapterNumber}`;
+  }
+
+  const boardPrefix = boardId === 'karnataka' ? 'kar' : boardId;
+  return `${boardPrefix}-${level}-${subjectShortCode[subjectId] || subjectId}-ch${chapterNumber}`;
+};
+
+const topicIdFor = (
+  boardId: string,
+  level: '11' | '12',
+  subjectId: string,
+  chapterNumber: number,
+  concept: string,
+  index: number
+) => {
+  if (boardId === 'karnataka' && level === '12' && subjectId === 'physics') {
+    if (concept === "Coulomb's Law") return 'topic-coulomb';
+    if (concept === 'Electric Field') return 'topic-efield';
+    if (concept === "Kirchhoff's Rules") return 'topic-kirchhoff';
+  }
+
+  return `${chapterIdFor(boardId, level, subjectId, chapterNumber)}-topic-${index + 1}-${slugify(concept)}`;
+};
+
+export function getSubjectCurriculum(
+  boardId: string,
+  classId: string,
+  subjectId: string,
+  academicYear = '2026-27'
+): SubjectCurriculum {
+  const level = getClassLevel(classId);
+  const subjectLabel = SUBJECTS.find((subject) => subject.id === subjectId)?.label || subjectId;
+
+  if (!level) {
+    return {
+      boardId,
+      classId,
+      streamId: 'science',
+      subjectId,
+      subjectName: subjectLabel,
+      academicYear,
+      chapters: [],
+    };
+  }
+
+  // The supplied PDFs/markdown contain NCERT 2026-27 Class 11/12 science
+  // curriculum data. It is enabled for Karnataka PUC and CBSE here.
+  if (!['karnataka', 'cbse'].includes(boardId)) {
+    return {
+      boardId,
+      classId,
+      streamId: 'science',
+      subjectId,
+      subjectName: subjectLabel,
+      academicYear,
+      chapters: [],
+    };
+  }
+
+  const rawSubject = SYLLABUS_2026_27[level]?.[subjectId];
+
+  if (!rawSubject) {
+    return {
+      boardId,
+      classId,
+      streamId: 'science',
+      subjectId,
+      subjectName: subjectLabel,
+      academicYear,
+      chapters: [],
+    };
+  }
+
+  return {
+    boardId,
+    classId,
+    streamId: 'science',
+    subjectId,
+    subjectName: rawSubject.subjectName,
+    academicYear,
+    chapters: rawSubject.chapters.map((rawChapter) => {
+      const chapterNumber = rawChapter.number;
+      const isLegacyPhysics =
+        boardId === 'karnataka' && level === '12' && subjectId === 'physics';
+      const legacy = isLegacyPhysics
+        ? legacyKarnatakaPhysicsMetadata[chapterNumber]
+        : undefined;
+
+      const topics: Topic[] = rawChapter.concepts.map((concept, index) => ({
+        id: topicIdFor(boardId, level, subjectId, chapterNumber, concept, index),
+        title: concept,
+        priority: 'SUPPORTING',
+        pyqCount: 0,
+        typicalMarks: [],
+        syllabusStatus: 'current',
+        description: `Included in the uploaded 2026-27 syllabus under ${rawChapter.title}.`,
+        subtopics: [],
+      }));
+
+      return {
+        id: chapterIdFor(boardId, level, subjectId, chapterNumber),
+        chapterNumber,
+        title: rawChapter.title,
+        description:
+          rawChapter.concepts.length > 0
+            ? `${rawChapter.concepts.length} syllabus concepts are mapped to this chapter.`
+            : 'This chapter is listed in the uploaded syllabus. Detailed Biology subsection concepts were not present in the supplied contents.',
+        weightageMarks: legacy?.weightageMarks ?? 0,
+        estLearningMinutes: legacy?.estLearningMinutes ?? 0,
+        difficulty: legacy?.difficulty ?? 'Medium',
+        topics,
+        pyqRelevanceCount: legacy?.pyqRelevanceCount ?? 0,
+        totalQuestionCount: legacy?.totalQuestionCount ?? 0,
+        completionPercentage: legacy?.completionPercentage ?? 0,
+      };
+    }),
+  };
+}
+
+// Backward-compatible export used by the existing sample Physics question bank.
+export const KARNATAKA_2PUC_PHYSICS_CURRICULUM: SubjectCurriculum =
+  getSubjectCurriculum('karnataka', '2nd PUC (12)', 'physics', '2026-27');
 
 // SAMPLE QUESTIONS FOR KARNATAKA 2ND PUC PHYSICS
 export const SAMPLE_QUESTIONS: QuestionData[] = [
@@ -454,6 +465,19 @@ export const SAMPLE_QUESTIONS: QuestionData[] = [
     pyqBoard: 'Karnataka 2nd PUC',
   },
 ];
+
+export function getQuestionsForCurriculum(curriculum: SubjectCurriculum): QuestionData[] {
+  const level = getClassLevel(curriculum.classId);
+  if (
+    curriculum.boardId === 'karnataka' &&
+    level === '12' &&
+    curriculum.subjectId === 'physics'
+  ) {
+    return SAMPLE_QUESTIONS;
+  }
+
+  return [];
+}
 
 // PREVIOUS YEAR PAPERS BANK
 export const PYQ_PAPERS_BANK: PYQPaper[] = [

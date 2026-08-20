@@ -3,8 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {
   BOARDS,
-  ACADEMIC_YEARS,
-  KARNATAKA_2PUC_PHYSICS_CURRICULUM,
+  getSubjectCurriculum,
   Board,
   SubjectCurriculum,
 } from '@/lib/curriculum';
@@ -29,7 +28,7 @@ const DEFAULT_ONBOARDING: OnboardingState = {
   boardId: 'karnataka',
   classId: '2nd PUC (12)',
   streamId: 'science',
-  selectedSubjects: ['physics', 'chemistry', 'mathematics', 'biology'],
+  selectedSubjects: ['physics', 'chemistry', 'mathematics', 'biology', 'computer_science'],
   academicYear: '2026-27',
   completedOnboarding: true,
 };
@@ -41,7 +40,6 @@ export const CurriculumProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [activeSubject, setActiveSubject] = useState<string>('physics');
   const [showOnboardingModal, setShowOnboardingModal] = useState<boolean>(false);
   const [showSearchModal, setShowSearchModal] = useState<boolean>(false);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     async function loadSavedProfile() {
@@ -55,7 +53,6 @@ export const CurriculumProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         // Prompt onboarding for first time
         setShowOnboardingModal(true);
       }
-      setIsLoaded(true);
     }
     loadSavedProfile();
   }, []);
@@ -65,11 +62,25 @@ export const CurriculumProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const updateOnboarding = async (newState: Partial<OnboardingState>) => {
     const updated = { ...onboardingState, ...newState };
     setOnboardingState(updated);
+
+    if (
+      newState.selectedSubjects &&
+      newState.selectedSubjects.length > 0 &&
+      !newState.selectedSubjects.includes(activeSubject)
+    ) {
+      setActiveSubject(newState.selectedSubjects[0]);
+    }
+
     await saveOnboardingState(updated);
   };
 
-  // Active curriculum object resolved dynamically
-  const activeCurriculum: SubjectCurriculum = KARNATAKA_2PUC_PHYSICS_CURRICULUM;
+  // Resolve the selected Class 11/12 + subject syllabus dynamically.
+  const activeCurriculum: SubjectCurriculum = getSubjectCurriculum(
+    onboardingState.boardId,
+    onboardingState.classId,
+    activeSubject,
+    onboardingState.academicYear
+  );
 
   return (
     <CurriculumContext.Provider
